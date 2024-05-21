@@ -1,0 +1,12 @@
+﻿@using BirdCounter.Model
+@model Bird
+
+<tr>
+    <td><img src="@Model.ImagePath" alt="@Model.Name" width="100" /></td>
+    <td>@Html.DisplayFor(modelItem => Model.Name)</td>
+    <td>@Html.DisplayFor(modelItem => Model.Description)</td>
+    <td>
+        <a href="@Url.Action("Edit", "Bird", new { id = Model.Id })" class="btn btn-primary">Edit</a>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="@Model.Id" data-name="@Model.Name" data-mode="delete">Delete</button>
+    </td>
+</tr>
