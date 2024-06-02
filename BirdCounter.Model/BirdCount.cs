@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace BirdCounter.Model
 {
-    // Bird.cs
-    public class Bird
+    public class BirdCount
     {
         [Required]
         public int Id { get; set; }
         [Required]
-        public string Name { get; set; }
-        public string? Description { get; set; }
-        public string? ImagePath { get; set; }
+        public int Bird_id { get; set; } // Navigation property
+        public int Count { get; set; }
     }
 }

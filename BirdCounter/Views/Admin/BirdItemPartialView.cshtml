@@ -6,7 +6,7 @@
     <td>@Html.DisplayFor(modelItem => Model.Name)</td>
     <td>@Html.DisplayFor(modelItem => Model.Description)</td>
     <td>
-        <a href="@Url.Action("Edit", "Bird", new { id = Model.Id })" class="btn btn-primary">Edit</a>
-        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="@Model.Id" data-name="@Model.Name" data-mode="delete">Delete</button>
+        <a href="@Url.Action("EditBird", "Admin", new { id = Model.Id })" class="btn btn-outline-warning">Edit</a>
+        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="@Model.Id" data-name="@Model.Name" data-mode="delete">Delete</button>
     </td>
 </tr>

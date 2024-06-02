@@ -1,0 +1,122 @@
+﻿@model CountingSession
+
+@{
+    ViewData["Title"] = "Count Birds";
+}
+
+<h2>Count Birds</h2>
+
+<form asp-action="CountBirds" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Start">Start:</label>
+        <input asp-for="Start" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="End">End:</label>
+        <input asp-for="End" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="Location">Location:</label>
+        <input asp-for="Location" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="User.Name">User:</label>
+        <input asp-for="User.Name" class="form-control" readonly />
+    </div>
+
+    <h4>Bird Counts</h4>
+    <hr />
+
+    <div class="row">
+        @foreach (var bird in ViewBag.Birds)
+        {
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <img class="card-img-top" src="@bird.ImagePath" alt="@bird.Name">
+                    <div class="card-body">
+                        <h5 class="card-title">@bird.Name</h5>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-primary" onclick="incrementBirdCount(@bird.Id, '@bird.Name')">+</button>
+                            </div>
+                            <small class="text-muted">Count: <span id="count-@bird.Id">0</span></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div id="birdCounts" hidden>
+        @foreach (var birdCount in Model.BirdCounts)
+        {
+            var Birds = ViewBag.Birds as List<Bird>;
+            var bird = Birds.Find(b => b.Id == birdCount.Bird_id);
+            <div class="form-group row" id="birdCount-@bird.Id">
+                <label class="col-sm-2 col-form-label">Bird Name:</label>
+                <div class="col-sm-4">
+                    <input name="BirdCounts[@Model.BirdCounts.IndexOf(birdCount)].Bird.Name" class="form-control" value="@bird.Name" readonly />
+                </div>
+                <label class="col-sm-2 col-form-label">Count:</label>
+                <div class="col-sm-4">
+                    <input name="BirdCounts[@Model.BirdCounts.IndexOf(birdCount)].Count" class="form-control" value="@birdCount.Count" />
+                </div>
+                <input type="hidden" name="BirdCounts[@Model.BirdCounts.IndexOf(birdCount)].Bird_id" value="@bird.Id" />
+                <button type="button" class="btn btn-danger" onclick="removeBirdCount(@birdCount.Bird_id)">Remove</button>
+            </div>
+        }
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Counts</button>
+</form>
+
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>
+
+@section Scripts {
+    <script>
+        function incrementBirdCount(birdId, birdName) {
+            const countSpan = document.getElementById(`count-${birdId}`);
+            if (countSpan) {
+                const count = parseInt(countSpan.textContent);
+                countSpan.textContent = count + 1;
+            }
+            const birdCountElement = document.getElementById(`birdCount-${birdId}`);
+            if (birdCountElement) {
+                const countInput = birdCountElement.querySelector('input[name$="Count"]');
+                countInput.value = parseInt(countInput.value) + 1;
+            } else {
+                const birdCountsDiv = document.getElementById('birdCounts');
+                if (!birdCountsDiv.classList.contains('show')) {
+                    birdCountsDiv.classList.add('show');
+                }
+                const index = birdCountsDiv.children.length;
+                const newBirdCountHtml = `
+                            <div class="form-group row" id="birdCount-${birdId}">
+                                <label class="col-sm-2 col-form-label">Bird Name:</label>
+                                <div class="col-sm-4">
+                                    <input name="BirdCounts[${index}].Bird.Name" class="form-control" value="${birdName}" readonly />
+                                </div>
+                                <label class="col-sm-2 col-form-label">Count:</label>
+                                <div class="col-sm-4">
+                                    <input name="BirdCounts[${index}].Count" class="form-control" value="1" />
+                                </div>
+                                <input type="hidden" name="BirdCounts[${index}].Bird_id" value="${birdId}" />
+                                <button type="button" class="btn btn-danger" onclick="removeBirdCount(${birdId})">Remove</button>
+                            </div>
+                        `;
+                const newDiv = document.createElement('div');
+                newDiv.innerHTML = newBirdCountHtml;
+                birdCountsDiv.appendChild(newDiv);
+            }
+        }
+
+        function removeBirdCount(birdId) {
+            const birdCountElement = document.getElementById(`birdCount-${birdId}`);
+            if (birdCountElement) {
+                birdCountElement.remove();
+            }
+        }
+    </script>
+}

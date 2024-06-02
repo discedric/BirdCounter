@@ -1,0 +1,33 @@
+﻿@model List<CountingSession>
+
+@{
+    ViewData["Title"] = "Counting Sessions";
+}
+
+<h2>Counting Sessions</h2>
+
+<a asp-action="Add" class="btn btn-outline-primary">Create New Counting Session</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Location</th>
+            <th>actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var session in Model)
+        {
+            <tr>
+                <td>@session.Id</td>
+                <td>@session.Start</td>
+                <td>@session.End</td>
+                <td>@session.Location</td>
+                <td><a asp-action="Details" asp-route-id="@session.Id" class="btn btn-outline-primary">Details</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

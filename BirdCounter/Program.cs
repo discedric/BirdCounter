@@ -1,7 +1,7 @@
 using BirdCounter.Core;
+using BirdCounter.Service;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Immutable;
-using BirdCounter.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +12,9 @@ builder.Services.AddDbContext<BirdDbContext>(options =>
 	options.UseInMemoryDatabase(nameof(BirdDbContext));
 });
 builder.Services.AddScoped<BirdService>();
+builder.Services.AddScoped<CountingSessionService>();
+builder.Services.AddScoped<UserService>();
+
 
 var app = builder.Build();
 

@@ -1,5 +1,46 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model List<CountingSession>
+
 @{
+    ViewData["Title"] = "Admin Counting Sessions";
 }
+
+<h2>Admin Counting Sessions</h2>
+
+<a asp-action="AddCountSession" class="btn btn-outline-primary">Create New Counting Session</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Location</th>
+            <th>User</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var session in Model)
+        {
+            <tr>
+                <td>@session.Id</td>
+                <td>@session.Start</td>
+                <td>@session.End</td>
+                <td>@session.Location</td>
+                @if(session.User != null)
+                {
+                    <td>@session.User.Name</td>
+                }
+                else
+                {
+                    <td>Unknown</td>
+                }
+                <td>
+                    <a asp-action="DetailsSession" asp-route-id="@session.Id" class="btn btn-outline-primary">Details</a> |
+                    <a asp-action="EditCountSession" asp-route-id="@session.Id" class="btn btn-outline-warning">Edit</a> |
+                    <a asp-action="DeleteCountSession" asp-route-id="@session.Id" class="btn btn-outline-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

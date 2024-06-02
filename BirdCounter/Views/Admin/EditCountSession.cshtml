@@ -1,0 +1,111 @@
+﻿@model CountingSession
+
+@{
+    ViewData["Title"] = "Edit Counting Session";
+    var model = Model;
+}
+
+<h2>Edit Counting Session</h2>
+
+<form asp-action="UpdateCountSession" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Start">Start:</label>
+        <input asp-for="Start" class="form-control" />
+        <span asp-validation-for="Start" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="End">End:</label>
+        <input asp-for="End" class="form-control" />
+        <span asp-validation-for="End" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Location">Location:</label>
+        <input asp-for="Location" class="form-control" required="" />
+        <span asp-validation-for="Location" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="User.Id">User:</label>
+        <select asp-for="User.Id" class="form-control" asp-items="@(new SelectList(ViewBag.Users, "Id", "Name"))"></select>
+        <span asp-validation-for="User.Id" class="text-danger"></span>
+    </div>
+
+    <h4>Bird Counts</h4>
+    <hr />
+    <button type="button" class="btn btn-success" onclick="addBirdCount()">Add Bird</button>
+    <div id="birdCounts">
+        @{
+            if (model.BirdCounts != null && model.BirdCounts.Count > 0)
+            {
+                foreach (var birdCount in Model.BirdCounts)
+                {
+                    var index = Model.BirdCounts.IndexOf(birdCount);
+                    var Birds = ViewBag.Birds as List<Bird>;
+                    var bird = Birds.Find(b => b.Id == birdCount.Bird_id);
+                    <div class="bird-count-entry">
+                        <input type="hidden" asp-for="BirdCounts[index].Bird_id" value="@bird.Id" />
+                        <div class="form-group">
+                            <label asp-for="@bird.Name">Bird Name:</label>
+                            <input asp-for="@bird.Name" class="form-control" readonly/>
+                            <span asp-validation-for="@bird.Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="BirdCounts[index].Count">Count:</label>
+                            <input asp-for="BirdCounts[index].Count" class="form-control"/>
+                            <span asp-validation-for="BirdCounts[index].Count" class="text-danger"></span>
+                        </div>
+                        <input type="hidden" asp-for="BirdCounts[index].Id"/>
+                        <button type="button" class="btn btn-danger" onclick="removeBirdCount(this)">Remove</button>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>No bird counts available</p>
+            }
+        }
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+
+<a asp-action="CountSessions" class="btn btn-secondary">Back to List</a>
+
+@section Scripts {
+    <script>
+        function addBirdCount() {
+            const birdCountsDiv = document.getElementById('birdCounts');
+            const index = birdCountsDiv.children.length / 3; // Adjust the divisor based on the number of fields per bird count
+
+            const newBirdCountHtml = `
+                                <div class="bird-count-entry">
+                                    <div class="form-group">
+                                        <input type="hidden" id="BirdCounts_${index}__Bird_id" name="BirdCounts[${index}].Bird_id" />
+                                        <label for="BirdCounts_${index}__Bird_Name">Bird Name:</label>
+                                        <select id="BirdCounts_${index}__Bird_Name" name="BirdCounts[${index}].Bird.Name" class="form-control">
+        @foreach (var bird in ViewBag.Birds)
+        {
+                        <option value="@bird.Name">@bird.Name</option>
+        }
+                                        </select>
+                                        <span class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="BirdCounts_${index}__Count">Count:</label>
+                                        <input id="BirdCounts_${index}__Count" name="BirdCounts[${index}].Count" class="form-control" />
+                                        <span class="text-danger"></span>
+                                    </div>
+                                    <button type="button" class="btn btn-danger" onclick="removeBirdCount(this)">Remove</button>
+                                </div>
+                            `;
+            const newDiv = document.createElement('div');
+            newDiv.innerHTML = newBirdCountHtml;
+            birdCountsDiv.appendChild(newDiv);
+        }
+
+        function removeBirdCount(button) {
+            button.closest('.bird-count-entry').remove();
+        }
+    </script>
+}

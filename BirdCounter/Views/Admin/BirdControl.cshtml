@@ -4,7 +4,7 @@
     ViewData["Title"] = "BirdControl";
 }
 
-<a asp-action="Create" asp-controller="Bird" class="btn btn-primary">New Bird</a>
+<a asp-action="AddBird" asp-controller="Admin" class="btn btn-outline-primary">New Bird</a>
 
 <table class="table">
     <thead>
@@ -35,8 +35,8 @@
                     <p>Are you sure you want to delete <ins name="name"></ins>?</p>
                 </div>
                 <div class="modal-footer">
-                    <form asp-action="Delete" asp-controller="Bird" method="post">
-                        <input type="hidden" name="formid" />
+                    <form asp-action="DeleteBird" asp-controller="Admin" method="post">
+                        <input type="hidden" name="id" />
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                         <button type="submit" class="btn btn-primary">Yes</button>
                     </form>
@@ -52,7 +52,7 @@
         $("button[data-mode='delete']").on("click", function () {
             let id = $(this).data("id");
             let name = $(this).data("name");
-            $("#deleteModal input[name='formid']").val(id);
+            $("#deleteModal input[name='id']").val(id);
             $("#deleteModal ins[name='name']").text(name);
         });
     </script>
