@@ -38,7 +38,11 @@
                 <td>
                     <a asp-action="DetailsSession" asp-route-id="@session.Id" class="btn btn-outline-primary">Details</a> |
                     <a asp-action="EditCountSession" asp-route-id="@session.Id" class="btn btn-outline-warning">Edit</a> |
-                    <a asp-action="DeleteCountSession" asp-route-id="@session.Id" class="btn btn-outline-danger">Delete</a>
+                    <form asp-action="DeleteCountSession" method="post">
+                        <input type="hidden" asp-for="@session.Id" name="id"/>
+                        <button type="submit" class="btn btn-outline-danger">Delete</button>
+                    </form>
+                    
                 </td>
             </tr>
         }

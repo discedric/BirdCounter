@@ -19,7 +19,15 @@ namespace BirdCounter.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View(_countingSessionService.Find());
+            var sessions = _countingSessionService.Find();
+            foreach (var session in sessions)
+            {
+                if (string.IsNullOrEmpty(session.Location))
+                {
+                    _countingSessionService.Delete(session.Id);
+                }
+            }
+            return View(sessions.ToList());
         }
 
         [HttpGet]
@@ -72,11 +80,28 @@ namespace BirdCounter.Controllers
             return View(countingSession);
         }
 
+        [HttpPost]
+        public IActionResult Cancel(int id)
+        {
+            _countingSessionService.Delete(id);
+            return RedirectToAction(nameof(Index));
+        }
+
         [HttpGet]
         public IActionResult Details(int id)
         {
             ViewBag.Birds = _birdService.Find();
-            return View(_countingSessionService.Find(id));
+            var session = _countingSessionService.Find(id);
+            if (session is null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            if(string.IsNullOrEmpty(session.Location))
+            {
+                _countingSessionService.Delete(id);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(session);
         }
     }
 }

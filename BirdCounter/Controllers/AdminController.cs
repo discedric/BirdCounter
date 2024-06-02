@@ -68,6 +68,7 @@ namespace BirdCounter.Controllers
 		[HttpPost]
 		public IActionResult AddBird(Bird bird)
         {
+            bird.ImagePath = "/Images/" + bird.ImagePath;
             _birdService.Add(bird);
             return RedirectToAction("BirdControl");
         }
